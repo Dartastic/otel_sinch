@@ -1,15 +1,16 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_sinch_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_sinch';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class SinchResult {
+  /// Creates a result.
   const SinchResult({
     this.product,
     this.region,
@@ -114,8 +115,13 @@ class SinchResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class SinchCallResult<T> {
+  /// Creates a call result.
   const SinchCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final SinchResult? result;
 }
@@ -149,7 +155,7 @@ Future<T> tracedSinch<T>({
   final span = _tracer().startSpan(
     'sinch $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
@@ -157,43 +163,43 @@ Future<T> tracedSinch<T>({
       final res = r.result!;
       final extras = <Attribute<Object>>[];
       if (res.product != null) {
-        extras.add(OTel.attributeString('sinch.product', res.product!));
+        extras.add(OTelAPI.attributeString('sinch.product', res.product!));
       }
       if (res.region != null) {
-        extras.add(OTel.attributeString('sinch.region', res.region!));
+        extras.add(OTelAPI.attributeString('sinch.region', res.region!));
       }
       if (res.servicePlanId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.service_plan.id',
           res.servicePlanId!,
         ));
       }
       if (res.from != null) {
-        extras.add(OTel.attributeString('sinch.from', res.from!));
+        extras.add(OTelAPI.attributeString('sinch.from', res.from!));
       }
       if (res.to != null) {
-        extras.add(OTel.attributeString('sinch.to', res.to!));
+        extras.add(OTelAPI.attributeString('sinch.to', res.to!));
       }
       if (res.countryCode != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.country_code',
           res.countryCode!,
         ));
       }
       if (res.batchId != null) {
-        extras.add(OTel.attributeString('sinch.batch.id', res.batchId!));
+        extras.add(OTelAPI.attributeString('sinch.batch.id', res.batchId!));
       }
       if (res.recipientCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'sinch.recipient.count',
           res.recipientCount!,
         ));
       }
       if (res.smsType != null) {
-        extras.add(OTel.attributeString('sinch.sms.type', res.smsType!));
+        extras.add(OTelAPI.attributeString('sinch.sms.type', res.smsType!));
       }
       if (res.deliveryStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.delivery.status',
           res.deliveryStatus!,
         ));
@@ -208,28 +214,28 @@ Future<T> tracedSinch<T>({
         }
       }
       if (res.encoding != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.sms.encoding',
           res.encoding!,
         ));
       }
       if (res.partCount != null) {
-        extras.add(OTel.attributeInt('sinch.sms.parts', res.partCount!));
+        extras.add(OTelAPI.attributeInt('sinch.sms.parts', res.partCount!));
       }
       if (res.smsPriceMicros != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'sinch.sms.price_micros',
           res.smsPriceMicros!,
         ));
       }
       if (res.callId != null) {
-        extras.add(OTel.attributeString('sinch.call.id', res.callId!));
+        extras.add(OTelAPI.attributeString('sinch.call.id', res.callId!));
       }
       if (res.callType != null) {
-        extras.add(OTel.attributeString('sinch.call.type', res.callType!));
+        extras.add(OTelAPI.attributeString('sinch.call.type', res.callType!));
       }
       if (res.callStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.call.status',
           res.callStatus!,
         ));
@@ -241,19 +247,19 @@ Future<T> tracedSinch<T>({
         }
       }
       if (res.callDurationSec != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'sinch.call.duration_sec',
           res.callDurationSec!,
         ));
       }
       if (res.verificationId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.verification.id',
           res.verificationId!,
         ));
       }
       if (res.verificationStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.verification.status',
           res.verificationStatus!,
         ));
@@ -266,44 +272,44 @@ Future<T> tracedSinch<T>({
         }
       }
       if (res.verificationMethod != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.verification.method',
           res.verificationMethod!,
         ));
       }
       if (res.conversationId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.conversation.id',
           res.conversationId!,
         ));
       }
       if (res.messageChannel != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.message.channel',
           res.messageChannel!,
         ));
       }
       if (res.conversationAppId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.conversation.app_id',
           res.conversationAppId!,
         ));
       }
       if (res.errorCode != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.error.code',
           res.errorCode!,
         ));
         span.setStatus(SpanStatusCode.Error, 'Sinch ${res.errorCode}');
       }
       if (res.errorMessage != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'sinch.error.message',
           res.errorMessage!,
         ));
       }
       if (res.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           res.statusCode!,
         ));
@@ -311,13 +317,13 @@ Future<T> tracedSinch<T>({
           span.setStatus(SpanStatusCode.Error, 'Sinch HTTP ${res.statusCode}');
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
